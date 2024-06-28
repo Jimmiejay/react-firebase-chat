@@ -30,9 +30,9 @@ const App = () => {
     <div className='container'>
       {currentUser ? (
         <>
-          <List />
-          <Chat />
-          <Detail />
+          <List user={user}/>
+          <Chat user={user}/>
+          <Detail user={user}/>
         </>
       ) : (
         <Login />

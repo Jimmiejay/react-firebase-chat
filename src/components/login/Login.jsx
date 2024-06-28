@@ -14,7 +14,6 @@ const Login = () => {
     })
 
     const [loading,setLoading] = useState(false)
-
     const handleAvatar = (e) =>{
         if(e.target.files[0]){
             setAvatar({
@@ -32,10 +31,8 @@ const Login = () => {
 
         
         try{
-
-            const res = await createUserWithEmailAndPassword(auth,email,password)
-
-            const imgUrl = await upload(avatar.file)
+            const res = await createUserWithEmailAndPassword(auth,email,password);
+            const imgUrl = await upload(avatar.file);
 
             await setDoc(doc(db, "users", res.user.uid), {
                 username,
@@ -45,7 +42,7 @@ const Login = () => {
                 blocked:[],
               });
 
-              await setDoc(doc(db, "userchat", res.user.uid), {
+              await setDoc(doc(db, "userchats", res.user.uid), {
                 chats:[],
               });
 
@@ -54,7 +51,7 @@ const Login = () => {
             console.log(err)
             toast.error(err.message)
         } finally{
-            setLoading(false)
+            setLoading(false);
         }
     };
 
@@ -67,7 +64,6 @@ const Login = () => {
 
         try{
             await signInWithEmailAndPassword(auth,email,password);
-
         }catch(err){
             console.log(err)
             toast.error(err.message)
