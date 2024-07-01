@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import './login.css'
 import { toast } from 'react-toastify'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
@@ -8,30 +8,30 @@ import upload from '../../lib/upload'
 
 
 const Login = () => {
-    const [avatar,setAvatar] = useState({
-        file:null,
-        url:""
+    const [avatar, setAvatar] = useState({
+        file: null,
+        url: ""
     })
 
-    const [loading,setLoading] = useState(false)
-    const handleAvatar = (e) =>{
-        if(e.target.files[0]){
+    const [loading, setLoading] = useState(false)
+    const handleAvatar = (e) => {
+        if (e.target.files[0]) {
             setAvatar({
-                file:e.target.files[0],
+                file: e.target.files[0],
                 url: URL.createObjectURL(e.target.files[0])
             })
         }
     };
 
-    const handleRegister = async(e) =>{
+    const handleRegister = async (e) => {
         e.preventDefault()
         setLoading(true)
         const formData = new FormData(e.target);
-        const {username, email, password} = Object.fromEntries(formData);
+        const { username, email, password } = Object.fromEntries(formData);
 
-        
-        try{
-            const res = await createUserWithEmailAndPassword(auth,email,password);
+
+        try {
+            const res = await createUserWithEmailAndPassword(auth, email, password);
             const imgUrl = await upload(avatar.file);
 
             await setDoc(doc(db, "users", res.user.uid), {
@@ -39,35 +39,35 @@ const Login = () => {
                 email,
                 avatar: imgUrl,
                 id: res.user.uid,
-                blocked:[],
-              });
+                blocked: [],
+            });
 
-              await setDoc(doc(db, "userchats", res.user.uid), {
-                chats:[],
-              });
+            await setDoc(doc(db, "userchats", res.user.uid), {
+                chats: [],
+            });
 
-              toast.success("Account create! You can login now!")
-        }catch(err){
+            toast.success("Account create! You can login now!")
+        } catch (err) {
             console.log(err)
             toast.error(err.message)
-        } finally{
+        } finally {
             setLoading(false);
         }
     };
 
-    const handleLogin = async(e) =>{
+    const handleLogin = async (e) => {
         e.preventDefault();
         setLoading(true)
 
         const formData = new FormData(e.target);
-        const {email, password} = Object.fromEntries(formData);
+        const { email, password } = Object.fromEntries(formData);
 
-        try{
-            await signInWithEmailAndPassword(auth,email,password);
-        }catch(err){
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+        } catch (err) {
             console.log(err)
             toast.error(err.message)
-        } finally{
+        } finally {
             setLoading(false)
         }
     };
@@ -89,7 +89,7 @@ const Login = () => {
                     <label htmlFor="file">
                         <img src={avatar.url || "./avatar.png"} alt="" />
                         Upload an image</label>
-                    <input type="file" id='file' style={{display:'none'}} onChange={handleAvatar}/>
+                    <input type="file" id='file' style={{ display: 'none' }} onChange={handleAvatar} />
                     <input type="text" placeholder='Username' name='username' />
                     <input type="text" placeholder='Email' name='email' />
                     <input type="password" placeholder='Password' name='password' />

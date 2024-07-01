@@ -6,7 +6,7 @@ export const useUserStore = create((set) => ({
     currentUser: null,
     isLoading: true,
     fetchUserInfo: async (uid) => {
-        if (uid) return set({ currentUser: null, isLoading: false });
+        if (!uid) return set({ currentUser: null, isLoading: false });
 
         try {
             const docRef = doc(db, "users", uid);
